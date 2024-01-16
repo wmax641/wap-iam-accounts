@@ -15,32 +15,34 @@ permissions:
   contents: read
 
 jobs:
-  fmt_check:
+  terraform_fmt:
     name: 'Format Check and Validation (on dev)'
     runs-on: ubuntu-latest
     environment: development
+    env:
+      ACCOUNT_ID: ${ACCOUNT_ID_DEV}
+      ACCOUNT_NAME : dev
     defaults:
       run:
         shell: bash
 
     steps:
-    - name: Checkout actions-oidc-debugger
-      uses: actions/checkout@v4
-      with:
-        repository: github/actions-oidc-debugger
-        ref: main
-        token: ${{ secrets.TOKEN }}
-        path: ./.github/actions/actions-oidc-debugger
+    #- name: Checkout actions-oidc-debugger
+    #  uses: actions/checkout@v4
+    #  with:
+    #    repository: github/actions-oidc-debugger
+    #    ref: main
+    #    token: ${{ secrets.TOKEN }}
+    #    path: ./.github/actions/actions-oidc-debugger
 
-    - name: Debug OIDC Claims
-      uses: ./.github/actions/actions-oidc-debugger
-      with:
-        audience: 'https://github.com/github'
+    #- name: Debug OIDC Claims
+    #  uses: ./.github/actions/actions-oidc-debugger
+    #  with:
+    #    audience: 'https://github.com/github'
 
     - name: Assume target IAM role
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        #role-to-assume: ${{env.TARGET_IAM_ROLE}}
         role-to-assume: arn:aws:iam::${{env.ACCOUNT_ID_DEV}}:role/IAMSeedRole
         aws-region: ap-southeast-2
 
@@ -50,41 +52,38 @@ jobs:
     - name: terraform fmt -check
       run: terraform fmt -check
 
+    - name: make init
+      run: make init
+
     - name: terraform validate
       run: terraform validate
 
-#  terraform:
-#    name: 'Deploy to Master'
-#    runs-on: ubuntu-latest
-#    environment: master
-#    defaults:
-#      run:
-#        shell: bash
-#    env:
-#      ACCOUNT: ${ACCOUNT_ID_MASTER}
-#
-#    steps:
-#    - name: Configure aws credentials
-#      uses: aws-actions/configure-aws-credentials@v4
-#      with:
-#        role-to-assume: arn:aws:iam::758802986069:role/IAMSeedRole
-#        aws-region: ap-southeast-2
-#
-#    - name: Get assumed role
-#      run: |
-#        echo "ASSUMED_ROLE=$(aws sts get-caller-identity --query 'Arn' --output text)" >> $GITHUB_ENV
-#        
-#    - name: Print Current Role
-#      run: echo "Using role ${{ env.ASSUMED_ROLE }}"
-#
-#    - name: Checkout
-#      uses: actions/checkout@v4
-#
-#    - name: make init
-#      run: make init
-#
-#    - name: make plan
-#      run: make plan
-#
-#    - name: make apply
-#      run: make apply
+  terraform_deploy_dev:
+    name: 'Deploy to dev'
+    runs-on: ubuntu-latest
+    environment: development
+    env:
+      ACCOUNT_ID: ${ACCOUNT_ID_DEV}
+      ACCOUNT_NAME : dev
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::${{env.ACCOUNT_ID}}:role/IAMSeedRole
+        aws-region: ap-southeast-2
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: make init
+      run: make init
+
+    - name: make plan
+      run: make plan
+
+    - name: make apply
+      run: make apply
