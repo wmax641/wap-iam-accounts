@@ -4,7 +4,7 @@ on:
     branches:
       - main
       - 'dev*'
-  #pull_request:
+  pull_request:
 
 env:
   ACCOUNT_ID_MASTER: 758802986069
@@ -23,6 +23,9 @@ jobs:
     defaults:
       run:
         shell: bash
+
+    - name: Checkout
+      uses: actions/checkout@v4
 
     steps:
     - name: terraform fmt -check
