@@ -1,0 +1,68 @@
+name: make
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+env:
+  ACCOUNT_ID_MASTER: 758802986069
+  ACCOUNT_ID_PRD:    640722323464
+  ACCOUNT_ID_DEV:    071440211637
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    name: 'Deploy to Master'
+    runs-on: ubuntu-latest
+    environment: master
+    defaults:
+      run:
+        shell: bash
+    env:
+      ACCOUNT: ${ACCOUNT_ID_MASTER}
+
+    steps:
+    - name: Configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::758802986069:role/IAMSeedRole
+        aws-region: ap-southeast-2
+
+    - name: Get assumed role
+      run: |
+        echo "ASSUMED_ROLE=$(aws sts get-caller-identity --query 'Arn' --output text)" >> $GITHUB_ENV
+        
+    - name: Print Current Role
+      run: echo "Using role ${{ env.ASSUMED_ROLE }}"
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: make init
+      run: make init
+
+    - name: make plan
+      run: make plan
+
+    - name: make apply
+      run: make apply
+#
+#    - name: Setup Terraform
+#      uses: hashicorp/setup-terraform@v3
+#
+#    - name: Terraform Init
+#      run: terraform init
+#
+#    - name: Terraform Format
+#      run: terraform fmt -check
+#
+#    - name: Terraform Plan
+#      run: terraform plan -input=false
+#
+#      # On push to "main", deploy the Terraform infrastructure
+#    - name: Terraform Apply
+#      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#      run: terraform apply -auto-approve -input=false
