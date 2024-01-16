@@ -20,7 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     env:
-      ACCOUNT_ID: ${{env.ACCOUNT_ID_DEV}}
       ACCOUNT_NAME : dev
     defaults:
       run:
@@ -63,7 +62,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     env:
-      ACCOUNT_ID: ${{env.ACCOUNT_ID_DEV}}
       ACCOUNT_NAME : dev
     defaults:
       run:
@@ -73,7 +71,7 @@ jobs:
     - name: Configure aws credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: arn:aws:iam::${{env.ACCOUNT_ID}}:role/IAMSeedRole
+        role-to-assume: arn:aws:iam::${{env.ACCOUNT_ID_DEV}}:role/IAMSeedRole
         aws-region: ap-southeast-2
 
     - name: Checkout
