@@ -7,7 +7,6 @@ on:
   pull_request:
 
 env:
-  ACCOUNT_ID_MASTER: "758802986069"
   ACCOUNT_ID_PRD:    "640722323464"
   ACCOUNT_ID_DEV:    "071440211637"
 
@@ -25,9 +24,6 @@ jobs:
         shell: bash
 
     steps:
-    - name: Set Target Role
-      run: echo "TARGET_IAM_ROLE=arn:aws:iam::${{env.ACCOUNT_ID_DEV}}:role/IAMSeedRole" >> $GITHUB_ENV
-
     - name: Checkout actions-oidc-debugger
       uses: actions/checkout@v4
       with:
