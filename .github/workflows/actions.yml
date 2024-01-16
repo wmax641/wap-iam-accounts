@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   fmt_check:
-    name: 'Format Check'
+    name: 'Format Check and Validation (on dev)'
     runs-on: ubuntu-latest
     environment: development
     defaults:
@@ -28,11 +28,18 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    steps:
+    - name: Configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::${ACCOUNT_ID_DEV}:role/IAMSeedRole
+        aws-region: ap-southeast-2
+
     - name: terraform fmt -check
       run: terraform fmt -check
 
-    - name: Complete
-      run: echo "Complete"
+    - name: terraform validate
+      run: terraform validate
 
 #  terraform:
 #    name: 'Deploy to Master'
