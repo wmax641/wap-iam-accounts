@@ -1,8 +1,10 @@
 name: make
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
+    branches:
+      - main
+      - 'dev*'
+  #pull_request:
 
 env:
   ACCOUNT_ID_MASTER: 758802986069
@@ -14,55 +16,53 @@ permissions:
   contents: read
 
 jobs:
-  terraform:
-    name: 'Deploy to Master'
+  fmt_check:
+    name: 'Format Check'
     runs-on: ubuntu-latest
-    environment: master
+    environment: development
     defaults:
       run:
         shell: bash
-    env:
-      ACCOUNT: ${ACCOUNT_ID_MASTER}
 
     steps:
-    - name: Configure aws credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: arn:aws:iam::758802986069:role/IAMSeedRole
-        aws-region: ap-southeast-2
+    - name: terraform fmt -check
+      run: terraform fmt -check
 
-    - name: Get assumed role
-      run: |
-        echo "ASSUMED_ROLE=$(aws sts get-caller-identity --query 'Arn' --output text)" >> $GITHUB_ENV
-        
-    - name: Print Current Role
-      run: echo "Using role ${{ env.ASSUMED_ROLE }}"
+    - name: Complete
+      run: echo "Complete"
 
-    - name: Checkout
-      uses: actions/checkout@v4
-
-    - name: make init
-      run: make init
-
-    - name: make plan
-      run: make plan
-
-    - name: make apply
-      run: make apply
+#  terraform:
+#    name: 'Deploy to Master'
+#    runs-on: ubuntu-latest
+#    environment: master
+#    defaults:
+#      run:
+#        shell: bash
+#    env:
+#      ACCOUNT: ${ACCOUNT_ID_MASTER}
 #
-#    - name: Setup Terraform
-#      uses: hashicorp/setup-terraform@v3
+#    steps:
+#    - name: Configure aws credentials
+#      uses: aws-actions/configure-aws-credentials@v4
+#      with:
+#        role-to-assume: arn:aws:iam::758802986069:role/IAMSeedRole
+#        aws-region: ap-southeast-2
 #
-#    - name: Terraform Init
-#      run: terraform init
+#    - name: Get assumed role
+#      run: |
+#        echo "ASSUMED_ROLE=$(aws sts get-caller-identity --query 'Arn' --output text)" >> $GITHUB_ENV
+#        
+#    - name: Print Current Role
+#      run: echo "Using role ${{ env.ASSUMED_ROLE }}"
 #
-#    - name: Terraform Format
-#      run: terraform fmt -check
+#    - name: Checkout
+#      uses: actions/checkout@v4
 #
-#    - name: Terraform Plan
-#      run: terraform plan -input=false
+#    - name: make init
+#      run: make init
 #
-#      # On push to "main", deploy the Terraform infrastructure
-#    - name: Terraform Apply
-#      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-#      run: terraform apply -auto-approve -input=false
+#    - name: make plan
+#      run: make plan
+#
+#    - name: make apply
+#      run: make apply
