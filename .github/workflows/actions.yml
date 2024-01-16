@@ -28,7 +28,7 @@ jobs:
     - name: Assume target IAM role
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: arn:aws:iam::$ACCOUNT_ID_DEV:role/IAMSeedRole
+        role-to-assume: "arn:aws:iam::${{ env.ACCOUNT_ID_DEV }}:role/IAMSeedRole"
         aws-region: ap-southeast-2
 
     - name: Checkout
