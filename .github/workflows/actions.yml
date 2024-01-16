@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     env:
-      ACCOUNT_ID: ${ACCOUNT_ID_DEV}
+      ACCOUNT_ID: ${{env.ACCOUNT_ID_DEV}}
       ACCOUNT_NAME : dev
     defaults:
       run:
@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     env:
-      ACCOUNT_ID: ${ACCOUNT_ID_DEV}
+      ACCOUNT_ID: ${{env.ACCOUNT_ID_DEV}}
       ACCOUNT_NAME : dev
     defaults:
       run:
