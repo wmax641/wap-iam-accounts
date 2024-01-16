@@ -27,13 +27,25 @@ jobs:
     steps:
     - name: Set Target Role
       run: echo "TARGET_IAM_ROLE=arn:aws:iam::${{env.ACCOUNT_ID_DEV}}:role/IAMSeedRole" >> $GITHUB_ENV
-    - name: Confirm Target Role
-      run: echo ${{env.TARGET_IAM_ROLE}}
+
+    - name: Checkout actions-oidc-debugger
+      uses: actions/checkout@v3
+      with:
+        repository: github/actions-oidc-debugger
+        ref: main
+        token: ${{ secrets.your-checkout-token }}
+        path: ./.github/actions/actions-oidc-debugger
+
+    - name: Debug OIDC Claims
+      uses: ./.github/actions/actions-oidc-debugger
+      with:
+        audience: 'https://github.com/github'
 
     - name: Assume target IAM role
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        role-to-assume: ${{env.TARGET_IAM_ROLE}}
+        #role-to-assume: ${{env.TARGET_IAM_ROLE}}
+        role-to-assume: arn:aws:iam::${{env.ACCOUNT_ID_DEV}}:role/IAMSeedRole
         aws-region: ap-southeast-2
 
     - name: Checkout
