@@ -29,11 +29,11 @@ jobs:
       run: echo "TARGET_IAM_ROLE=arn:aws:iam::${{env.ACCOUNT_ID_DEV}}:role/IAMSeedRole" >> $GITHUB_ENV
 
     - name: Checkout actions-oidc-debugger
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         repository: github/actions-oidc-debugger
         ref: main
-        token: ${{ secrets.your-checkout-token }}
+        token: ${{ secrets.TOKEN }}
         path: ./.github/actions/actions-oidc-debugger
 
     - name: Debug OIDC Claims
