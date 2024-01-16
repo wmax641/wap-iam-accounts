@@ -89,7 +89,7 @@ jobs:
     - name: make apply
       run: make apply
 
-  terraform_deploy_dev:
+  terraform_deploy_prd:
     name: 'dploy to prd'
     if: github.ref == 'refs/heads/master'
     needs: [terraform_fmt, terraform_deploy_dev]
