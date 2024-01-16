@@ -27,6 +27,8 @@ jobs:
     steps:
     - name: Set Target Role
       run: echo "TARGET_IAM_ROLE=arn:aws:iam::${{ env.ACCOUNT_ID_DEV }}:role/IAMSeedRole" >> $GITHUB_ENV
+    - name: Confirm Target Role
+      run: echo ${{env.TARGET_IAM_ROLE}}
 
     - name: Assume target IAM role
       uses: aws-actions/configure-aws-credentials@v4
