@@ -14,9 +14,13 @@ permissions:
   id-token: write
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   terraform_fmt:
-    name: 'Format Check and Validation (on dev)'
+    name: 'fmt + validate (on dev)'
     runs-on: ubuntu-latest
     environment: development
     env:
@@ -59,6 +63,8 @@ jobs:
 
   terraform_deploy_dev:
     name: 'Deploy to dev'
+    #if: github.ref == 'refs/heads/master'
+    if: ${{ startsWith(github.ref, 'refs/heads/dev') || github.ref == 'regs/heads/main' }}
     needs: [terraform_fmt]
     runs-on: ubuntu-latest
     environment: development
