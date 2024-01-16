@@ -91,7 +91,7 @@ jobs:
 
   terraform_deploy_prd:
     name: 'dploy to prd'
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/main'
     needs: [terraform_fmt, terraform_deploy_dev]
     runs-on: ubuntu-latest
     environment: production
