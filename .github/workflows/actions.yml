@@ -59,8 +59,7 @@ jobs:
       run: terraform validate
 
   terraform_deploy_dev:
-    name: 'Deploy to dev'
-    #if: github.ref == 'refs/heads/master'
+    name: 'deploy to dev'
     if: startsWith(github.ref, 'refs/heads/dev') || github.ref == 'refs/heads/main'
     needs: [terraform_fmt]
     runs-on: ubuntu-latest
@@ -76,6 +75,37 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::${{env.ACCOUNT_ID_DEV}}:role/IAMSeedRole
+        aws-region: ap-southeast-2
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: make init
+      run: make init
+
+    - name: make plan
+      run: make plan
+
+    - name: make apply
+      run: make apply
+
+  terraform_deploy_dev:
+    name: 'dploy to prd'
+    if: github.ref == 'refs/heads/master'
+    needs: [terraform_fmt, terraform_deploy_dev]
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      ACCOUNT_NAME : prd
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::${{env.ACCOUNT_ID_PRD}}:role/IAMSeedRole
         aws-region: ap-southeast-2
 
     - name: Checkout
