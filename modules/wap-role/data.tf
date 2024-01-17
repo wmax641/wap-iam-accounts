@@ -1,5 +1,11 @@
-#
-#
+data "aws_region" "current" {}
+data "aws_caller_identity" "current" {}
+
+data "aws_iam_policy" "permission_boundary" {
+  name        = var.permission_boundary
+  path_prefix = "/boundary/"
+}
+
 #data "aws_iam_policy_document" "assume_role_policy" {
 #  statement {
 #    actions = [

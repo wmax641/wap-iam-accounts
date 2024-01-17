@@ -27,8 +27,13 @@ variable "inline_polices" {
 }
 
 variable "managed_policy_arns" {
-
   type        = list(string)
   description = "List of managed ARN policies to attach"
   default     = []
+}
+
+variable "permission_boundary" {
+  type        = string
+  description = "Name of permission boundary. Defaults to WAPServicePermissionBoundary if unset "
+  default     = "WAPServicePermissionBoundary"
 }
