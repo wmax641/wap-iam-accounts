@@ -13,8 +13,6 @@ resource "aws_iam_role" "wap_role" {
     }
   }
 
-  # If creating a deploy role, use the Assume Role policy
-  # Otherwise use provided assumption policy
   assume_role_policy = var.create_deploy_role ? data.aws_iam_policy_document.deploy_role_assume_role_policy.json : var.assume_role_policy
 
   tags = merge({
