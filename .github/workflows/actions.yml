@@ -6,8 +6,6 @@ on:
 env:
   ACCOUNT_ID_PRD:    "640722323464"
   ACCOUNT_ID_DEV:    "071440211637"
-  ACCOUNT_NAME_PRD:  "prd"
-  ACCOUNT_NAME_DEV:  "dev"
 
 permissions:
   id-token: write
@@ -51,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: development
     env:
-      ACCOUNT_NAME : ${{env.ACCOUNT_NAME_DEV}}
+      ACCOUNT_NAME : dev
     defaults:
       run:
         shell: bash
@@ -85,7 +83,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     env:
-      ACCOUNT_NAME : ${{env.ACCOUNT_NAME_PRD}}
+      ACCOUNT_NAME : prd
     defaults:
       run:
         shell: bash
