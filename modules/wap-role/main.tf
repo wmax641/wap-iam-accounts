@@ -8,8 +8,8 @@ resource "aws_iam_role" "wap_role" {
   dynamic "inline_policy" {
     for_each = local.inline_policy_map
     content {
-      name   = "${var.name}-InlinePolicy-${each.key}"
-      policy = each.value
+      name   = "${var.name}-InlinePolicy-${inline_policy.key}"
+      policy = inline_policy.value
     }
   }
 
