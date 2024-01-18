@@ -11,9 +11,6 @@ permissions:
   id-token: write
   contents: read
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   terraform_fmt:
@@ -27,19 +24,6 @@ jobs:
         shell: bash
 
     steps:
-    #- name: Checkout actions-oidc-debugger
-    #  uses: actions/checkout@v4
-    #  with:
-    #    repository: github/actions-oidc-debugger
-    #    ref: main
-    #    token: ${{ secrets.TOKEN }}
-    #    path: ./.github/actions/actions-oidc-debugger
-
-    #- name: Debug OIDC Claims
-    #  uses: ./.github/actions/actions-oidc-debugger
-    #  with:
-    #    audience: 'https://github.com/github'
-
     - name: Assume target IAM role
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -69,6 +53,9 @@ jobs:
     defaults:
       run:
         shell: bash
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: false
 
     steps:
     - name: Configure aws credentials
@@ -100,6 +87,9 @@ jobs:
     defaults:
       run:
         shell: bash
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: false
 
     steps:
     - name: Configure aws credentials
