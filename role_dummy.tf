@@ -12,8 +12,8 @@ module "test_role" {
     data.aws_iam_policy_document.inline_policy_0.json,
     data.aws_iam_policy_document.inline_policy_1.json,
   ]
-  used_by_repo       = "wmax641/wap-iam-test"
-  tags               = { "additional" = "tag" }
+  used_by_repo = "wmax641/wap-iam-test"
+  tags         = { "additional" = "tag" }
 }
 
 module "test_deploy_role" {
