@@ -1,7 +1,8 @@
-module "test_role" {
+## Example of a service role and deploy role
+module "test_service_role" {
   source = "./modules/wap-role"
 
-  name = "WAPTestRole4"
+  name = "TestServiceRole"
 
   assume_role_policy = data.aws_iam_policy_document.test_role_assume_policy.json
   managed_policy_arns = [
@@ -12,6 +13,7 @@ module "test_role" {
     data.aws_iam_policy_document.inline_policy_0.json,
     data.aws_iam_policy_document.inline_policy_1.json,
   ]
+
   used_by_repo = "wmax641/wap-iam-test"
   tags         = { "additional" = "tag" }
 }
@@ -19,7 +21,7 @@ module "test_role" {
 module "test_deploy_role" {
   source = "./modules/wap-role"
 
-  name = "WAPTestDeployRole4"
+  name = "TestDeployRole"
 
   assume_role_policy = data.aws_iam_policy_document.test_role_assume_policy.json
   managed_policy_arns = [
@@ -30,6 +32,7 @@ module "test_deploy_role" {
     data.aws_iam_policy_document.inline_policy_0.json,
     data.aws_iam_policy_document.inline_policy_1.json,
   ]
+
   create_deploy_role = true
   used_by_repo       = "wmax641/wap-iam-test"
   tags               = { "additional" = "tag" }
@@ -63,7 +66,6 @@ data "aws_iam_policy_document" "inline_policy_1" {
     actions = [
       "s3:listBucket",
     ]
-
     resources = ["*"]
   }
 }
