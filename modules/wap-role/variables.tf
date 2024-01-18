@@ -18,9 +18,10 @@ variable "tags" {
 variable "assume_role_policy" {
   type        = string
   description = "Inline Assume role policy"
+  default     = ""
 }
 
-variable "inline_polices" {
+variable "inline_policies" {
   type        = list(string)
   description = "Inline IAM policy document as list of JSONs. Each item generates a separate inline policy"
   default     = []
@@ -32,8 +33,22 @@ variable "managed_policy_arns" {
   default     = []
 }
 
-variable "permission_boundary" {
+variable "create_deploy_role" {
+  type        = bool
+  description = "Whether or not to create a Deploy Role. Defaults to false to create a serice role"
+  default     = false
+}
+
+variable "used_by_repo" {
   type        = string
-  description = "Name of permission boundary. Defaults to WAPServicePermissionBoundary if unset "
-  default     = "WAPServicePermissionBoundary"
+  description = "The repo that uses these roles"
+}
+
+variable "account_id_prd" {
+  type    = string
+  default = "640722323464"
+}
+variable "account_id_dev" {
+  type    = string
+  default = "071440211637"
 }
