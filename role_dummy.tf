@@ -9,7 +9,7 @@ module "test_role" {
     "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess",
   ]
   used_by_repo = "wmax641/wap-iam-test"
-  tags = { "additional" = "tag" }
+  tags         = { "additional" = "tag" }
 }
 
 data "aws_iam_policy_document" "test_role_assume_policy" {
