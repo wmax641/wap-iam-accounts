@@ -3,7 +3,7 @@ resource "aws_iam_role" "wap_role" {
   path = var.path
 
   managed_policy_arns  = var.managed_policy_arns
-  permissions_boundary = var.create_deploy_role ? data.aws_iam_policy.permission_boundary_deploy : data.aws_iam_policy.permission_boundary_service.arn
+  permissions_boundary = var.create_deploy_role ? data.aws_iam_policy.permission_boundary_deploy.arn : data.aws_iam_policy.permission_boundary_service.arn
 
   dynamic "inline_policy" {
     for_each = local.inline_policy_map
