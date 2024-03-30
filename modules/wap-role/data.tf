@@ -45,3 +45,31 @@ data "aws_iam_policy_document" "deploy_role_assume_role_policy" {
     }
   }
 }
+
+data "aws_iam_policy_document" "deploy_role_policy" {
+  statement {
+    sid = "s3ListBucket"
+    actions = [
+      "s3:ListBucket",
+    ]
+    resources = ["tf-${data.aws_caller_identity.current.account_id}"]
+  }
+  statement {
+    sid = "readWriteTerrformStateS3"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+    ]
+    resources = ["tf-${data.aws_caller_identity.current.account_id}/${var.used_by_repo}"]
+  }
+  statement {
+    sid = "dynamodb"
+    actions = [
+      "dynamodb:DescribeTable",
+      "dynamodb:GetItem",
+      "dynamodb:PutItem",
+      "dynamodb:DeleteItem",
+    ]
+    resources = ["arn:aws:dynamodb:*:*:table/tf-${data.aws_caller_identity.current.account_id}"]
+  }
+}
