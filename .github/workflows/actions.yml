@@ -1,7 +1,8 @@
 name: make
 on:
-  push:
   pull_request:
+    branches:
+      - main
 
 env:
   ACCOUNT_ID_PRD:    "640722323464"
@@ -13,7 +14,7 @@ permissions:
 
 
 jobs:
-  terraform_fmt:
+  🔍terraform_fmt:
     name: 'fmt + validate (on dev)'
     runs-on: ubuntu-latest
     environment: development
@@ -33,16 +34,16 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: terraform fmt -check
+    - name: 🔍 terraform fmt
       run: terraform fmt -check
 
     - name: make init
       run: make init
 
-    - name: terraform validate
+    - name: 🔍 terraform validate
       run: terraform validate
 
-  terraform_deploy_dev:
+  🧪terraform_deploy_dev:
     name: 'deploy to dev'
     if: startsWith(github.ref, 'refs/heads/dev') || github.ref == 'refs/heads/main'
     needs: [terraform_fmt]
@@ -58,26 +59,23 @@ jobs:
       cancel-in-progress: false
 
     steps:
-    - name: Configure aws credentials
+    - name: 🪪 AWS assume role
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::${{env.ACCOUNT_ID_DEV}}:role/IAMSeedRole
         aws-region: ap-southeast-2
 
-    - name: Checkout
+    - name: 🛒 Checkout
       uses: actions/checkout@v4
 
     - name: make init
       run: make init
 
-    - name: make plan
-      run: make plan
+    - name: make deploy
+      run: make deploy
 
-    - name: make apply
-      run: make apply
-
-  terraform_deploy_prd:
-    name: 'dploy to prd'
+  🚀terraform_deploy_prd:
+    name: 'deploy to prd'
     if: github.ref == 'refs/heads/main'
     needs: [terraform_fmt, terraform_deploy_dev]
     runs-on: ubuntu-latest
@@ -92,20 +90,18 @@ jobs:
       cancel-in-progress: false
 
     steps:
-    - name: Configure aws credentials
+    - name: 🪪 AWS assume role
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: arn:aws:iam::${{env.ACCOUNT_ID_PRD}}:role/IAMSeedRole
         aws-region: ap-southeast-2
 
-    - name: Checkout
+    - name: 🛒 Checkout
       uses: actions/checkout@v4
 
     - name: make init
       run: make init
 
-    - name: make plan
-      run: make plan
+    - name: make deploy
+      run: make deploy
 
-    - name: make apply
-      run: make apply

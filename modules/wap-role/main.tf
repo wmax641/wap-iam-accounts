@@ -16,7 +16,7 @@ resource "aws_iam_role" "wap_role" {
   dynamic "inline_policy" {
     for_each = var.create_deploy_role == true ? [1] : []
     content {
-      name = "${var.name}-DeployRolePolicy"
+      name   = "${var.name}-DeployRolePolicy"
       policy = data.aws_iam_policy_document.deploy_role_policy.json
     }
   }
