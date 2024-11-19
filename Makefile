@@ -30,7 +30,7 @@ plan:
 apply:
 	terraform apply -input=false tfplan-${ACCOUNT_ID}
 
-deploy: switch_workspace plan apply
+deploy: plan apply
 
 destroy: are_you_sure
 	terraform plan -destroy -input=false -out=tfplan-${ACCOUNT_ID} -var-file="vars/${TARGET_ENV}.tfvars"
